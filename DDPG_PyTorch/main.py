@@ -1,10 +1,9 @@
 import gym
 import torch
 import tensorboardX
-from ddpg import DDPG
+from agents import DDPG, DDPG_PER
 import argparse
 import os
-import time
 
 
 def main(args):
@@ -21,7 +20,6 @@ def main(args):
     summary = tensorboardX.SummaryWriter('./log/{}_{}'.format(args['env_name'], args['noise_type']))
 
     timestep = 0
-    start_time = time.time()
     for episode in range(args['max_episode']):
         episode_reward = 0
         state = env.reset()
@@ -34,16 +32,13 @@ def main(args):
             state = next_state
             timestep += 1
 
-            if ddpg.memory_counter > args['batch_size']: # BATCH_SIZE(64) 이상일 때 부터 train 시작
+            if timestep > args['batch_size']: # BATCH_SIZE(64) 이상일 때 부터 train 시작
                 ddpg.train()
 
             if done:
                 print('episode: ', episode, '   reward : %.3f'%(episode_reward), '    timestep :', timestep)
 
                 summary.add_scalar('reward/episode', episode_reward, episode)
-                sec = int(start_time - time.time())
-                summary.add_scalar('reward/time', episode_reward, sec)
-
                 break
 
         if episode % args['save_freq'] == 0:
