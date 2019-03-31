@@ -1,7 +1,7 @@
 import gym
 import torch
 import tensorboardX
-from td3 import TD3
+from agents import TD3
 import argparse
 import os
 

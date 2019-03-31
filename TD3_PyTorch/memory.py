@@ -114,6 +114,7 @@ class Per:  # stored as ( s, a, r, s_ ) in SumTree
         p = self._get_priority(error)
         self.tree.update(idx, p)
 
+# random
 class Memory :
 
     def __init__(self, memory_size):
