@@ -143,7 +143,7 @@ class DDPG(nn.Module):
 
 class DDPG_PER(nn.Module):
     def __init__(self, args, action_dim, max_action, state_dim, device):
-        super(DDPG, self).__init__()
+        super(DDPG_PER, self).__init__()
         self.actor = Actor(state_dim, action_dim).to(device)
         self.target_actor = Actor(state_dim, action_dim).to(device)
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=args['actor_lr'])
