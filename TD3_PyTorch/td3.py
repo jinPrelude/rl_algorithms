@@ -50,7 +50,9 @@ class Critic(nn.Module):
             nn.ReLU(),
             nn.Linear(400, 300),
             nn.ReLU(),
-            nn.Linear(300, 200)
+            nn.Linear(300, 200),
+            nn.ReLU(),
+            nn.Linear()
         )
 
     def forward(self, x, action):

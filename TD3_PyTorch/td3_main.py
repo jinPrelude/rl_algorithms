@@ -4,7 +4,6 @@ import tensorboardX
 from td3 import TD3
 import argparse
 import os
-import time
 
 
 def main(args):
@@ -21,7 +20,6 @@ def main(args):
     summary = tensorboardX.SummaryWriter('./log/{}_td3_{}'.format(args['env_name'], args['noise_type']))
 
     timestep = 0
-    start_time = time.time()
     for episode in range(args['max_episode']):
         episode_reward = 0
         state = env.reset()
@@ -39,7 +37,6 @@ def main(args):
 
             if done:
                 print('episode: ', episode, '   reward : %.3f'%(episode_reward), '    timestep :', timestep)
-
                 summary.add_scalar('reward/episode', episode_reward, episode)
 
                 break
