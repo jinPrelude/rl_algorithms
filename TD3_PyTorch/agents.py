@@ -76,7 +76,6 @@ class TD3(nn.Module):
         self.critic_optimizer2 = optim.Adam(self.critic2.parameters(), lr=args['critic_lr'])
 
         self.memory = Memory(args['memory_size'])
-        self.memory_counter = 0
 
         self.ou = OrnsteinUhlenbeckActionNoise(action_dim=action_dim)
 
@@ -108,12 +107,11 @@ class TD3(nn.Module):
                 target_param.data.copy_(target_param.data * (1.0 - self.args['tau']) + param.data * self.args['tau'])
 
     def save(self, state, action, reward, next_state, done):
-        self.memory.append((state, action, reward, next_state, done))
-        self.memory_counter += 1
+        self.memory.add((state, action, reward, next_state, done))
 
 
     def train(self):
-        minibatch = random.sample(self.memory, self.args['batch_size'])
+        minibatch = self.memory.sample(self.args['batch_size'])
         minibatch = np.array(minibatch).transpose()
 
         states = torch.from_numpy(np.vstack(minibatch[0])).float()

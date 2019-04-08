@@ -32,7 +32,7 @@ def main(args):
             state = next_state
             timestep += 1
 
-            if td3.memory_counter > args['train_start_timestep']:
+            if timestep > args['train_start_timestep']:
                 if timestep % 2 == 0 :
                     td3.train()
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     parser.add_argument('--noise_type', default='gaussian')
     parser.add_argument('--noise-delta', default=0.1)
     parser.add_argument('--batch-size', default=32)
-    parser.add_argument('--train-start-timestep', default=50000)
+    parser.add_argument('--train-start-timestep', default=10000)
     parser.add_argument('--tau', default=5e-3)
 
 
