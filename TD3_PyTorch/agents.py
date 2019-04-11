@@ -61,9 +61,10 @@ class Critic(nn.Module):
         return x
 
 
-class TD3(nn.Module):
+class TD3():
     def __init__(self, args, action_dim, max_action, state_dim, device):
         super(TD3, self).__init__()
+        np.random.seed(args['seed'])
         self.actor = Actor(state_dim, action_dim).to(device)
         self.target_actor = Actor(state_dim, action_dim).to(device)
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=args['actor_lr'])
@@ -75,7 +76,7 @@ class TD3(nn.Module):
         self.critic_optimizer1 = optim.Adam(self.critic1.parameters(), lr=args['critic_lr'])
         self.critic_optimizer2 = optim.Adam(self.critic2.parameters(), lr=args['critic_lr'])
 
-        self.memory = Memory(args['memory_size'])
+        self.memory = Memory(args['memory_size'], args['seed'])
 
         self.ou = OrnsteinUhlenbeckActionNoise(action_dim=action_dim)
 
@@ -110,7 +111,7 @@ class TD3(nn.Module):
         self.memory.add((state, action, reward, next_state, done))
 
 
-    def train(self):
+    def train(self, summary, timestep):
         minibatch = self.memory.sample(self.args['batch_size'])
         minibatch = np.array(minibatch).transpose()
 
@@ -137,6 +138,7 @@ class TD3(nn.Module):
 
         q1 = self.critic1(states, actions)
         critic_loss1 = F.mse_loss(q1, target)
+        summary.add_scalar('critic_loss/timestep', critic_loss1, timestep)
         self.critic_optimizer1.zero_grad()
         critic_loss1.backward()
         self.critic_optimizer1.step()
@@ -150,6 +152,7 @@ class TD3(nn.Module):
         # actor update
         self.actor_optimizer.zero_grad()
         actor_loss = -self.critic1(states, self.actor(states)).mean()
+        summary.add_scalar('actor_loss/timestep', actor_loss, timestep)
         actor_loss.backward()
         self.actor_optimizer.step()
 

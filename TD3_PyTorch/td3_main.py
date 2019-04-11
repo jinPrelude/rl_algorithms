@@ -8,6 +8,7 @@ import os
 
 def main(args):
     env = gym.make(args['env_name'])
+    env.seed(args['seed'])
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -34,7 +35,7 @@ def main(args):
 
             if timestep > args['train_start_timestep']:
                 if timestep % 2 == 0 :
-                    td3.train()
+                    td3.train(summary, timestep)
 
             if done:
                 print('episode: ', episode, '   reward : %.3f'%(episode_reward), '    timestep :', timestep)
@@ -51,6 +52,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--seed', default=0)
     parser.add_argument('--env-name', default='LunarLanderContinuous-v2')
     parser.add_argument('--env-seed', default=0)
     parser.add_argument('--render', default=False, type=bool)

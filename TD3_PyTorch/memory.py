@@ -4,7 +4,8 @@ from collections import deque
 
 class Memory :
 
-    def __init__(self, memory_size):
+    def __init__(self, memory_size, seed = 0):
+        random.seed(seed)
         self.memory = deque(maxlen=memory_size)
         self.memory_counter = 0
 

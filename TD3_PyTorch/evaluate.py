@@ -41,11 +41,12 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--seed', default=0)
     parser.add_argument('--env-name', default='LunarLanderContinuous-v2')
     parser.add_argument('--env-seed', default=0)
     parser.add_argument('--render', default=True, type=bool)
     parser.add_argument('--evaluate', default=False, type=bool)
-    parser.add_argument('--model-directory', default='./SaveModel/LunarLanderContinuous-v2_gaussian_100', type=str)
+    parser.add_argument('--model-directory', default='./SaveModel/LunarLanderContinuous-v2_td3_gaussian_900', type=str)
     parser.add_argument('--max-episode', default=5000)
     parser.add_argument('--save-freq', default=100)
 
